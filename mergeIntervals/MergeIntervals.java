@@ -20,34 +20,24 @@ public class MergeIntervals {
         System.out.println();
     }
 
-    private static List<Interval> mergeIntervals(List<Interval> intervalList)
-    {
-        if(intervalList.size() < 2)
+    private static List<Interval> mergeIntervals(List<Interval> intervalList) {
+        if (intervalList.size() < 2)
             return intervalList;
 
         List<Interval> result = new ArrayList<>();
-        Collections.sort(intervalList, new Comparator<Interval>() {
-            @Override
-            public int compare(Interval o1, Interval o2) {
-                return o1.start - o2.start;
-            }
-        });
+        intervalList.sort(Comparator.comparingInt(o -> o.start));
 
-        result.add(intervalList.get(0));
+        result.add(intervalList.getFirst());
 
-        for(int i = 1; i< intervalList.size(); i++)
-        {
-            Interval firstInterval = result.get(result.size()-1);
+        for (int i = 1; i < intervalList.size(); i++) {
+            Interval firstInterval = result.getLast();
             Interval secondInterval = intervalList.get(i);
 
-            if(isOverlap(firstInterval, secondInterval))
-            {
+            if (isOverlap(firstInterval, secondInterval)) {
                 /*Interval mergedInterval = new Interval(firstInterval.start, secondInterval.end);
                 result.add(mergedInterval);*/
                 firstInterval.end = Math.max(secondInterval.end, firstInterval.end);
-            }
-            else
-            {
+            } else {
                 result.add(secondInterval);
             }
         }
@@ -56,14 +46,11 @@ public class MergeIntervals {
     }
 
     private static boolean isOverlap(Interval firstInterval, Interval secondInterval) {
-        if(secondInterval.start < firstInterval.end)
-        {
-            return true;
-        }
-        return false;
+        return secondInterval.start < firstInterval.end;
     }
 
 }
+
 class Interval {
     int start;
     int end;
